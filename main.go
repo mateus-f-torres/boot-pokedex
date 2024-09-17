@@ -3,29 +3,25 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"log"
 	"os"
-)
 
-type command struct {
-	name        string
-	description string
-	callback    func() error
-}
+	"github.com/mateus-f-torres/boot_pokedex/internal/commands"
+)
 
 func main() {
 	prompt := "pokedex > "
 	buf := bufio.NewScanner(os.Stdin)
-	cmds := getCommands()
+	cmds := commands.GetCommands()
+	cnf := commands.GetConfig()
 	for {
 		fmt.Print(prompt)
 		buf.Scan()
 		input := buf.Text()
 		c, ok := cmds[input]
 		if ok {
-			err := c.callback()
+			err := c.Callback(&cnf)
 			if err != nil {
-				log.Fatal(err)
+				fmt.Printf("an error occurred: %v\n", err)
 			}
 		} else {
 			fmt.Printf("unknown command: %v\n", input)

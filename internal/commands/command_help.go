@@ -1,10 +1,10 @@
-package main
+package commands
 
 import "fmt"
 
-func commandHelp() error {
+func commandHelp(c *config) error {
 	fmt.Print("Welcome to the Pokedex!\nUsage:\n\n")
-	cmds := getCommands()
+	cmds := GetCommands()
 
 	for _, c := range cmds {
 		fmt.Printf("%v: %v\n", c.name, c.description)
