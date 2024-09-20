@@ -9,7 +9,7 @@ import (
 	"github.com/mateus-f-torres/boot_pokedex/internal/pokeapi"
 )
 
-func commandMapB(c *config) error {
+func commandMapB(c *config, args []string) error {
 	if c.Previous == "" {
 		return errors.New("no previous location list")
 	}

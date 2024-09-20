@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/mateus-f-torres/boot_pokedex/internal/cache"
@@ -19,16 +20,18 @@ func main() {
 	for {
 		fmt.Print(prompt)
 		buf.Scan()
-		input := buf.Text()
-		c, ok := cmds[input]
-		if ok {
-			err := c.Callback(&cnf)
-			if err != nil {
-				fmt.Printf("an error occurred: %v\n", err)
+		inputs := strings.Split(buf.Text(), " ")
+		if len(inputs) > 0 {
+			c, ok := cmds[inputs[0]]
+			if ok {
+				err := c.Callback(&cnf, inputs[1:])
+				if err != nil {
+					fmt.Printf("an error occurred: %v\n", err)
+				}
+			} else {
+				fmt.Printf("unknown command: %v\n", inputs[0])
+				fmt.Println("type 'help' to see list of available commands")
 			}
-		} else {
-			fmt.Printf("unknown command: %v\n", input)
-			fmt.Println("type 'help' to see list of available commands")
 		}
 	}
 }

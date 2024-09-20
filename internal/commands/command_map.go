@@ -8,7 +8,7 @@ import (
 	"github.com/mateus-f-torres/boot_pokedex/internal/pokeapi"
 )
 
-func commandMap(c *config) error {
+func commandMap(c *config, args []string) error {
 	locations := pokeapi.Locations{}
 
 	data, hit := c.Cache.Get(c.Next)
