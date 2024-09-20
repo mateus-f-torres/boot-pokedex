@@ -4,15 +4,18 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"time"
 
+	"github.com/mateus-f-torres/boot_pokedex/internal/cache"
 	"github.com/mateus-f-torres/boot_pokedex/internal/commands"
 )
 
 func main() {
 	prompt := "pokedex > "
 	buf := bufio.NewScanner(os.Stdin)
+	cache := cache.NewCache(1 * time.Minute)
 	cmds := commands.GetCommands()
-	cnf := commands.GetConfig()
+	cnf := commands.GetConfig(cache)
 	for {
 		fmt.Print(prompt)
 		buf.Scan()
