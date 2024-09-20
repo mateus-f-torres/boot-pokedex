@@ -17,15 +17,6 @@ type locationDetails struct {
 	} `json:"areas"`
 }
 
-type areaDetails struct {
-	PokemonEncounters []struct {
-		Pokemon struct {
-			Name string `json:"name"`
-			// URL  string `json:"url"`
-		} `json:"pokemon"`
-	} `json:"pokemon_encounters"`
-}
-
 func (api *PokeAPI) GetLocationPokemons(locName string) ([]string, error) {
 	pokemons := []string{}
 
@@ -40,25 +31,10 @@ func (api *PokeAPI) GetLocationPokemons(locName string) ([]string, error) {
 		return pokemons, err
 	}
 
+	// NOTE: already breaking up a little to make it easier to use goroutines
 	locPokemons := map[string]bool{}
 	for _, item := range locDetails.Areas {
-		var areaDetails areaDetails
-		rawArea, err := httpclient.Get(item.URL)
-		if err != nil {
-			return pokemons, nil
-		}
-
-		err = json.Unmarshal(rawArea, &areaDetails)
-		if err != nil {
-			return pokemons, nil
-		}
-
-		for _, encounter := range areaDetails.PokemonEncounters {
-			name := encounter.Pokemon.Name
-			if _, ok := locPokemons[name]; !ok {
-				locPokemons[name] = true
-			}
-		}
+		api.searchAreaForPokemons(item.URL, locPokemons)
 	}
 
 	for k := range locPokemons {
@@ -66,4 +42,35 @@ func (api *PokeAPI) GetLocationPokemons(locName string) ([]string, error) {
 	}
 
 	return pokemons, nil
+}
+
+type areaDetails struct {
+	PokemonEncounters []struct {
+		Pokemon struct {
+			Name string `json:"name"`
+			// URL  string `json:"url"`
+		} `json:"pokemon"`
+	} `json:"pokemon_encounters"`
+}
+
+func (api *PokeAPI) searchAreaForPokemons(rawUrl string, locPokemons map[string]bool) error {
+	var areaDetails areaDetails
+	rawArea, err := httpclient.Get(rawUrl)
+	if err != nil {
+		return nil
+	}
+
+	err = json.Unmarshal(rawArea, &areaDetails)
+	if err != nil {
+		return nil
+	}
+
+	for _, encounter := range areaDetails.PokemonEncounters {
+		name := encounter.Pokemon.Name
+		if _, ok := locPokemons[name]; !ok {
+			locPokemons[name] = true
+		}
+	}
+
+	return nil
 }

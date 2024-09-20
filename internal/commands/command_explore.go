@@ -7,10 +7,12 @@ import (
 )
 
 func commandExplore(api *pokeapi.PokeAPI, args []string) error {
-	if len(args) > 0 {
-		fmt.Printf("exploring %v...\n", args[0])
+	if len(args) < 1 {
+		fmt.Println("missing area")
+		return nil
 	}
 
+	fmt.Printf("exploring %v...\n", args[0])
 	pokemons, err := api.GetLocationPokemons(args[0])
 	if err != nil {
 		return err
