@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	httpclient "github.com/mateus-f-torres/boot_pokedex/internal/http-client"
+	"github.com/mateus-f-torres/boot_pokedex/internal/pokeapi"
 )
 
 const LOCATION_URL string = "https://pokeapi.co/api/v2/location"
@@ -27,7 +28,7 @@ type AreaDetails struct {
 	} `json:"pokemon_encounters"`
 }
 
-func commandExplore(c *config, args []string) error {
+func commandExplore(api *pokeapi.PokeAPI, args []string) error {
 	if len(args) > 0 {
 		fmt.Printf("exploring %v...\n", args[0])
 	}

@@ -1,8 +1,12 @@
 package commands
 
-import "fmt"
+import (
+	"fmt"
 
-func commandHelp(c *config, args []string) error {
+	"github.com/mateus-f-torres/boot_pokedex/internal/pokeapi"
+)
+
+func commandHelp(api *pokeapi.PokeAPI, args []string) error {
 	fmt.Print("Welcome to the Pokedex!\nUsage:\n\n")
 	cmds := GetCommands()
 

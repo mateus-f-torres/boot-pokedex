@@ -7,24 +7,23 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mateus-f-torres/boot_pokedex/internal/cache"
 	"github.com/mateus-f-torres/boot_pokedex/internal/commands"
+	"github.com/mateus-f-torres/boot_pokedex/internal/pokeapi"
 )
 
 func main() {
 	prompt := "pokedex > "
-	buf := bufio.NewScanner(os.Stdin)
-	cache := cache.NewCache(1 * time.Minute)
+	buffer := bufio.NewScanner(os.Stdin)
 	cmds := commands.GetCommands()
-	cnf := commands.GetConfig(cache)
+	pokeapi := pokeapi.GetPokeAPI(1 * time.Minute)
 	for {
 		fmt.Print(prompt)
-		buf.Scan()
-		inputs := strings.Split(buf.Text(), " ")
+		buffer.Scan()
+		inputs := strings.Split(buffer.Text(), " ")
 		if len(inputs) > 0 {
 			c, ok := cmds[inputs[0]]
 			if ok {
-				err := c.Callback(&cnf, inputs[1:])
+				err := c.Callback(pokeapi, inputs[1:])
 				if err != nil {
 					fmt.Printf("an error occurred: %v\n", err)
 				}

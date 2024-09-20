@@ -2,8 +2,8 @@ package pokeapi
 
 import (
 	"encoding/json"
-	"io"
-	"net/http"
+
+	httpclient "github.com/mateus-f-torres/boot_pokedex/internal/http-client"
 )
 
 type Locations struct {
@@ -14,24 +14,27 @@ type Locations struct {
 	} `json:"results"`
 }
 
-func GetLocations(url string) (Locations, error) {
+func (api *PokeAPI) GetLocations(url string) (Locations, error) {
 	locs := Locations{}
 
-	res, err := http.Get(url)
+	data, hit := api.cache.Get(url)
+	if !hit {
+		body, err := httpclient.Get(url)
+		if err != nil {
+			return locs, err
+		}
+
+		data = body
+		api.cache.Add(url, body)
+	}
+
+	err := json.Unmarshal(data, &locs)
 	if err != nil {
 		return locs, err
 	}
 
-	body, err := io.ReadAll(res.Body)
-	res.Body.Close()
-	if err != nil {
-		return locs, err
-	}
-
-	err = json.Unmarshal(body, &locs)
-	if err != nil {
-		return locs, err
-	}
+	api.Next = locs.Next
+	api.Prev = locs.Previous
 
 	return locs, nil
 }

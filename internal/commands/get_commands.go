@@ -1,9 +1,11 @@
 package commands
 
+import "github.com/mateus-f-torres/boot_pokedex/internal/pokeapi"
+
 type Command struct {
 	name        string
 	description string
-	Callback    func(c *config, args []string) error
+	Callback    func(api *pokeapi.PokeAPI, args []string) error
 }
 
 func GetCommands() map[string]Command {
