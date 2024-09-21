@@ -35,14 +35,20 @@ func GetCommands() map[string]Command {
 			description: "try to catch a given Pokémon",
 			Callback:    commandCatch,
 		},
-		"help": {
+		"inspect": {
 			order:       4,
+			name:        "inspect <pokemon>",
+			description: "print out a Pokémon's description",
+			Callback:    commandInspect,
+		},
+		"help": {
+			order:       5,
 			name:        "help",
 			description: "displays a help message",
 			Callback:    commandHelp,
 		},
 		"exit": {
-			order:       5,
+			order:       6,
 			name:        "exit",
 			description: "exit the Pokedex",
 			Callback:    commandExit,
